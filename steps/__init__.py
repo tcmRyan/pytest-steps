@@ -12,6 +12,16 @@ Usage
 """
 
 import pytest
+import inspect
+import re
+
+
+def get_multiline_comments(func):
+    comment_pattern = re.compile(r'""".*?"""|\'\'\'.*?\'\'\'', re.DOTALL)
+    source = inspect.getsource(func)
+    return comment_pattern.findall(source)
+
+
 
 class PytestSteps(object):
 

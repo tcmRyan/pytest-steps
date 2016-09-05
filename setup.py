@@ -22,5 +22,5 @@ setup(
     },
     zip_safe = False,
     include_package_data = True,
-    install_requires = ['pytest>=2.7.0']
+    install_requires = ['pytest>=3.0.2']
 )

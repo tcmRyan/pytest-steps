@@ -12,16 +12,25 @@ Usage
 """
 
 import pytest
+import inspect
+import re
+
+
+def get_multiline_comments(func):
+    comment_pattern = re.compile(r'""".*?"""|\'\'\'.*?\'\'\'', re.DOTALL)
+    source = inspect.getsource(func)
+    return comment_pattern.findall(source)
+
+
 
 class PytestSteps(object):
-    
+
+    def pytest_itemcollected(self, item):
+        print self.extract_steps(item.function.__doc__)
+
     @pytest.hookimpl(tryfirst=True)
-    def pytest_report_teststatus(self, item, call, __multicall__):
-        report = __multicall__.execute()
-        setattr(item, "rep_" + report.when, report)
-        if report.when == 'call':
-            report.test_steps = self.extract_steps(item.function.__doc__)
-        return report
+    def pytest_report_teststatus(self, report):
+        pass
 
     def extract_steps(self, infostr):
         """
@@ -38,8 +47,7 @@ def pytest_addoption(parser):
     :param parser:
     :return:
     """
-    group = parser.getgroup('collect steps')
-    group.addoption('--collect-steps', action="store_true", dest="collect_steps", default=False,
+    parser.addoption('--collect-steps', action="store_true", dest="collect_steps", default=False,
                      help='Sets if pytest should collect test steps from docstrings')
 
 def pytest_configure(config):

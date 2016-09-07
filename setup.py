@@ -14,7 +14,7 @@ setup(
         'osx',
         'win32'
     ],
-    py_modules = ['steps'],
+    packages = ['steps'],
     entry_points = {
         'pytest11': [
             'pytest_steps = steps'
